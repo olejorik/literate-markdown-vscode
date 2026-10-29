@@ -1,0 +1,77 @@
+{
+    "name": "Literate.jl Markdown",
+    "scopeName": "markdown.literate.julia",
+    "comment": "Markdown of Literate.jl scripts. A run of lines '# text' (or a lone '#') at column 0 is one Markdown region, like a block quote with the prefix '#'; '##', '#=', '#|', '#md', '#-' etc. are left to Julia. A block '#=' ... '=#' (each on its own line, as Literate requires) is Markdown without prefixes. The Markdown is highlighted with the grammar of the Quarto extension (text.html.quarto), as in the .qmd; plain Markdown if Quarto is not installed.",
+    "injectionSelector": "L:source.julia -comment -string -meta.literate",
+    "patterns": [
+        {
+            "include": "#header"
+        },
+        {
+            "include": "#block"
+        },
+        {
+            "include": "#lines"
+        },
+        {
+            "include": "#block-end"
+        }
+    ],
+    "repository": {
+        "header": {
+            "comment": "the Quarto header '# ---' ... '# ---' at the top of the file stays a comment",
+            "begin": "\\A# ---\\s*$",
+            "end": "^# ---\\s*$",
+            "name": "comment.block.header.literate.julia"
+        },
+        "block": {
+            "begin": "^(#=+)\\s*$",
+            "while": "^(?!=+#\\s*$)",
+            "beginCaptures": {
+                "1": {
+                    "name": "comment.block.literate.julia punctuation.definition.comment.begin.julia"
+                }
+            },
+            "contentName": "meta.literate.block.julia text.html.quarto",
+            "patterns": [
+                {
+                    "include": "text.html.quarto"
+                },
+                {
+                    "include": "text.html.markdown"
+                }
+            ]
+        },
+        "block-end": {
+            "match": "^(=+#)\\s*$",
+            "captures": {
+                "1": {
+                    "name": "comment.block.literate.julia punctuation.definition.comment.end.julia"
+                }
+            }
+        },
+        "lines": {
+            "begin": "^(#)(?=\\s|$) ?",
+            "while": "^(#)(?=\\s|$) ?",
+            "beginCaptures": {
+                "1": {
+                    "name": "comment.line.number-sign.literate.julia punctuation.definition.comment.julia"
+                }
+            },
+            "whileCaptures": {
+                "1": {
+                    "name": "comment.line.number-sign.literate.julia punctuation.definition.comment.julia"
+                }
+            },
+            "contentName": "meta.literate.lines.julia text.html.quarto",
+            "patterns": [
+                {
+                    "include": "text.html.quarto"
+                },
+                {
+                    "include": "text.html.markdown"
+                }
+            ]
+        }
+    }
+}

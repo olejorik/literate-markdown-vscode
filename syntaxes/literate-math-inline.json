@@ -1,0 +1,11 @@
+{
+    "name": "Literate.jl Markdown: inline math",
+    "scopeName": "markdown.literate.math.inline.julia",
+    "comment": "For plain Markdown (Quarto not installed): VS Code injects its Markdown math only into Markdown files; this brings the inline math ($...$) into the Markdown regions of markdown.literate.julia. With Quarto the paragraphs are meta.paragraph.quarto and have their own math.",
+    "injectionSelector": "L:meta.literate meta.paragraph.markdown - (comment, string, markup.math.inline.markdown, markup.fenced_code.block.markdown)",
+    "patterns": [
+        {
+            "include": "markdown.math.inline"
+        }
+    ]
+}

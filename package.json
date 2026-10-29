@@ -1,0 +1,67 @@
+{
+    "name": "literate-markdown",
+    "displayName": "Literate.jl Markdown highlighting",
+    "description": "Highlights the Markdown of Literate.jl scripts: runs of '# ' lines and #= ... =# blocks, with the Quarto grammar",
+    "version": "0.1.0",
+    "publisher": "olejorik",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/olejorik/literate-markdown-vscode"
+    },
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "keywords": [
+        "julia",
+        "literate",
+        "quarto",
+        "markdown"
+    ],
+    "extensionDependencies": [
+        "julialang.language-julia"
+    ],
+    "contributes": {
+        "grammars": [
+            {
+                "scopeName": "markdown.literate.julia",
+                "path": "./syntaxes/literate-markdown.json",
+                "injectTo": [
+                    "source.julia"
+                ]
+            },
+            {
+                "scopeName": "markdown.literate.math.inline.julia",
+                "path": "./syntaxes/literate-math-inline.json",
+                "injectTo": [
+                    "source.julia"
+                ]
+            },
+            {
+                "scopeName": "markdown.literate.math.block.julia",
+                "path": "./syntaxes/literate-math-block.json",
+                "injectTo": [
+                    "source.julia"
+                ]
+            }
+        ],
+        "configurationDefaults": {
+            "[julia]": {
+                "editor.unicodeHighlight.allowedCharacters": {
+                    "–": true,
+                    "—": true
+                }
+            }
+        }
+    },
+    "scripts": {
+        "test": "node test/tokenize.js test/sample.jl"
+    },
+    "devDependencies": {
+        "vscode-oniguruma": "^2.0.1",
+        "vscode-textmate": "^9.0.0"
+    }
+}
