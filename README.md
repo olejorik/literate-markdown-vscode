@@ -71,7 +71,10 @@ git clone https://github.com/olejorik/literate-markdown-vscode ~/.vscode/extensi
 ```
 
 `git pull` in that folder and *Developer: Reload Window* update it. Check with
-`code --list-extensions`, which should list `olejorik.literate-markdown`.
+`code --list-extensions`, which should list `olejorik.literate-markdown`. VS Code does not always
+record a folder put there by hand; if the extension is not listed after a restart, add an entry for
+it to `~/.vscode/extensions/extensions.json`, following the entries already there (`identifier.id`
+`olejorik.literate-markdown`, `version`, `location`, `relativeLocation`).
 
 **Profiles.** VS Code adds an extension found in the folder only to the default profile. If you
 work in another profile, open the Extensions view in it, find "Literate.jl Markdown highlighting"
