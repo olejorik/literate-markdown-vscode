@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — 2026-10-29
+
+- The watch task also runs `quarto preview` of the `.qmd` (which, unlike the preview of the Quarto
+  extension, re-renders when the `.qmd` changes on disk) and opens the page in the Simple Browser
+  beside the editor; terminating the task stops both processes. Setting
+  `literateMarkdown.quartoExecutable`.
+
 ## 0.2.0 — 2026-10-29
 
 - Tasks of type `literate` provided by the extension (`extension.js`), on the open file: watch

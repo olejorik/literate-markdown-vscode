@@ -2,7 +2,7 @@
     "name": "literate-markdown",
     "displayName": "Literate.jl Markdown highlighting",
     "description": "Highlights the Markdown of Literate.jl scripts: runs of '# ' lines and #= ... =# blocks, with the Quarto grammar; tasks for a live Quarto preview",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "publisher": "olejorik",
     "license": "MIT",
     "repository": {
@@ -67,7 +67,7 @@
                             "blocks",
                             "install"
                         ],
-                        "description": "watch: .jl → .qmd at every save; blocks: text lines into #= =# blocks; install: Literate.jl into the environment"
+                        "description": "watch: .jl → .qmd at every save, with a Quarto preview beside the editor; blocks: text lines into #= =# blocks; install: Literate.jl into the environment"
                     }
                 }
             }
@@ -84,6 +84,11 @@
                     "type": "string",
                     "default": "@literate",
                     "description": "Julia environment (--project) in which the tasks run; it must contain Literate.jl."
+                },
+                "literateMarkdown.quartoExecutable": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Quarto for the preview of the watch task; empty: quarto.path of the Quarto extension, or quarto on the PATH."
                 }
             }
         },

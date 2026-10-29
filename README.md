@@ -1,3 +1,6 @@
+DISCLAIMER. The code is created by Clode code, I have no experience in VS Code extensions. Use with caution an at your own risk.
+
+
 # Literate.jl Markdown highlighting for VS Code
 
 [Literate.jl](https://github.com/fredrikekre/Literate.jl) turns a Julia script into a document: the
@@ -10,8 +13,8 @@ This extension makes VS Code highlight the text of such scripts as Markdown, wit
 the Quarto extension, so that it looks as it does in the `.qmd`: headings, lists, emphasis, inline
 code, cross-references `@sec-…`, citations, and mathematics `$…$` and `$$…$$`. The code is left as
 it is. It also provides tasks for two small Julia scripts: one rewrites the `.qmd` each time the
-script is saved, so that an open Quarto preview follows the edits; the other rewrites old scripts
-into the form described next.
+script is saved and shows a Quarto preview of it beside the editor, which follows the edits; the
+other rewrites old scripts into the form described next.
 
 ## Two ways to write the text
 
@@ -24,7 +27,7 @@ delimiters `#=` and `=#` stand on lines of their own. Both are highlighted:
 # A phase-diversity sensor records $K$ images (@sec-model).
 
 using LinearAlgebra
-f(x) = x^2        ## a comment in the code: `##`, as Literate requires
+f(x) = x^2        # a comment in the code
 
 #=
 ## The example
@@ -108,15 +111,16 @@ text, are not boxed as ambiguous Unicode characters (`editor.unicodeHighlight.al
 
 | Task | What it does |
 |---|---|
-| `literate: watch .jl → .qmd (for Quarto Preview)` | converts the script to `.qmd` next to it, and again at every save |
+| `literate: watch .jl → .qmd with Quarto preview` | converts the script to `.qmd` next to it, again at every save, and shows the rendered page beside the editor |
 | `literate: rewrite text lines into #= =# blocks` | rewrites the text lines `# …` of the script as blocks |
 | `literate: install Literate.jl` | adds Literate.jl to the environment of the tasks |
 
 The tasks run Julia in a separate environment, `@literate` by default, so that they do not depend on
-the project they are used in; run "install Literate.jl" once. Two settings change this:
-`literateMarkdown.juliaProject` (the environment, given to `--project`) and
+the project they are used in; run "install Literate.jl" once. Three settings change this:
+`literateMarkdown.juliaProject` (the environment, given to `--project`),
 `literateMarkdown.juliaExecutable` (Julia itself; by default `julia.executablePath` of the Julia
-extension, or `julia` on the PATH).
+extension, or `julia` on the PATH) and `literateMarkdown.quartoExecutable` (by default `quarto.path`
+of the Quarto extension, or `quarto` on the PATH).
 
 A task can also be put into `tasks.json`, for example to give it a key binding:
 
@@ -128,17 +132,26 @@ A task can also be put into `tasks.json`, for example to give it a key binding:
 
 ### Preview while editing the script
 
-Run `literate: watch .jl → .qmd` on the script, open the `.qmd` once and start *Quarto: Preview* on
-it. The preview re-renders whenever the `.qmd` changes on disk, so it follows the edits of the
-script. Do not edit the `.qmd` meanwhile: it is overwritten at every save. Stop the task with
-*Tasks: Terminate Task*. From a terminal the same is
+Run `literate: watch .jl → .qmd with Quarto preview` on the script. The task runs two processes, in
+its own terminal: the watcher, which writes the `.qmd` and rewrites it at every save of the script,
+and `quarto preview` of the `.qmd`. When Quarto has rendered the page, it opens in the Simple Browser
+beside the editor, and it re-renders whenever the `.qmd` changes on disk, so it follows the edits of
+the script. Do not edit the `.qmd` meanwhile: it is overwritten at every save. *Tasks: Terminate
+Task* (or Ctrl+C in the terminal of the task) stops both processes.
+
+The preview of the Quarto extension itself (*Quarto: Preview*) does not serve here: it runs
+`quarto preview --no-watch-inputs` and re-renders only when the `.qmd` is saved in the editor, not
+when another program rewrites it.
+
+The watcher alone, from a terminal, is
 
 ```sh
 julia --project=@literate scripts/literate_watch.jl path/to/script.jl [more.jl …]
 ```
 
-with `--interval=<s>` for how often the files are checked (default 0.5 s). The `.qmd` is written in
-the Quarto flavour of Literate, without the Literate credit line.
+with `--interval=<s>` for how often the files are checked (default 0.5 s); then
+`quarto preview path/to/script.qmd` (without `--no-watch-inputs`) in another terminal. The `.qmd` is
+written in the Quarto flavour of Literate, without the Literate credit line.
 
 ### Text lines into blocks
 
@@ -167,7 +180,9 @@ The highlighting is done by three TextMate grammars injected into the Julia gram
   its own Markdown mathematics only to Markdown files, not to Markdown embedded in another language.
 
 `extension.js` provides the tasks: it knows where the extension is installed and so where the
-scripts are (`scripts/`).
+scripts are (`scripts/`). For the watch task it starts the watcher and `quarto preview` itself,
+opens the page when Quarto prints its address, and stops both (with their child processes) when
+the task is terminated.
 
 ## Development
 
@@ -192,7 +207,9 @@ scripts are (`scripts/`).
 
 - **Formulas on hover.** In a `.qmd` the Quarto extension shows a rendered formula when the mouse
   rests on it; in a `.jl` the hover comes from the Julia language server, which shows nothing for
-  text. This needs a hover provider in `extension.js` (with MathJax).
+  text. This needs a hover provider in `extension.js` (with MathJax). The command *Quarto: Preview
+  Math* does not help: it works only in Quarto and Markdown documents, and only for display
+  mathematics. Meanwhile the formulas can be read in the preview of the watch task.
 - **From `.qmd` back to `.jl`.** A conversion of a `.qmd` that has no script into a Literate script,
   and an update of the text blocks of the script when the `.qmd` is edited.
 
