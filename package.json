@@ -1,8 +1,8 @@
 {
     "name": "literate-markdown",
     "displayName": "Literate.jl Markdown highlighting",
-    "description": "Highlights the Markdown of Literate.jl scripts: runs of '# ' lines and #= ... =# blocks, with the Quarto grammar",
-    "version": "0.1.0",
+    "description": "Highlights the Markdown of Literate.jl scripts: runs of '# ' lines and #= ... =# blocks, with the Quarto grammar; tasks for a live Quarto preview",
+    "version": "0.2.0",
     "publisher": "olejorik",
     "license": "MIT",
     "repository": {
@@ -10,7 +10,7 @@
         "url": "https://github.com/olejorik/literate-markdown-vscode"
     },
     "engines": {
-        "vscode": "^1.60.0"
+        "vscode": "^1.74.0"
     },
     "categories": [
         "Programming Languages"
@@ -23,6 +23,11 @@
     ],
     "extensionDependencies": [
         "julialang.language-julia"
+    ],
+    "main": "./extension.js",
+    "activationEvents": [
+        "onCommand:workbench.action.tasks.runTask",
+        "onLanguage:julia"
     ],
     "contributes": {
         "grammars": [
@@ -48,6 +53,40 @@
                 ]
             }
         ],
+        "taskDefinitions": [
+            {
+                "type": "literate",
+                "required": [
+                    "action"
+                ],
+                "properties": {
+                    "action": {
+                        "type": "string",
+                        "enum": [
+                            "watch",
+                            "blocks",
+                            "install"
+                        ],
+                        "description": "watch: .jl → .qmd at every save; blocks: text lines into #= =# blocks; install: Literate.jl into the environment"
+                    }
+                }
+            }
+        ],
+        "configuration": {
+            "title": "Literate.jl Markdown",
+            "properties": {
+                "literateMarkdown.juliaExecutable": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Julia for the tasks of type literate; empty: julia.executablePath of the Julia extension, or julia on the PATH."
+                },
+                "literateMarkdown.juliaProject": {
+                    "type": "string",
+                    "default": "@literate",
+                    "description": "Julia environment (--project) in which the tasks run; it must contain Literate.jl."
+                }
+            }
+        },
         "configurationDefaults": {
             "[julia]": {
                 "editor.unicodeHighlight.allowedCharacters": {
@@ -58,7 +97,8 @@
         }
     },
     "scripts": {
-        "test": "node test/tokenize.js test/sample.jl"
+        "test": "node test/tokenize.js test/sample.jl",
+        "link": "node tools/link.js"
     },
     "devDependencies": {
         "vscode-oniguruma": "^2.0.1",

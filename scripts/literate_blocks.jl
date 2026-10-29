@@ -8,6 +8,11 @@
 #     julia --project=@literate scripts/literate_blocks.jl path/to/script.jl [out.jl]
 #
 # Without `out.jl` the file is rewritten in place (commit it first, to keep the old version).
+# In VS Code: the task "literate: rewrite text lines into #= =# blocks" of the extension, on the
+# open file.
+Base.find_package("Literate") === nothing && (println("""Literate.jl is not in the environment \
+    $(Base.active_project()): run the task "literate: install Literate.jl", or \
+    julia --project=@literate -e 'using Pkg; Pkg.add("Literate")'"""); exit(1))
 using Literate, Logging
 length(ARGS) in (1, 2) || (println("usage: julia --project=@literate literate_blocks.jl <in.jl> [out.jl]"); exit(1))
 src = ARGS[1]
