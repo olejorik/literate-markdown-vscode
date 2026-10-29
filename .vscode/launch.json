@@ -1,0 +1,14 @@
+{
+    // F5: a second VS Code window with the extension loaded from this folder
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run the extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}"
+            ]
+        }
+    ]
+}
